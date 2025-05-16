@@ -1,0 +1,172 @@
+//DOM Elements
+const AddInput = document.querySelector('.addTask')
+const control = document.querySelector('.todoControl')
+const container =   document.querySelector('.boxContainer')
+const clearCompleted = document.querySelector('.clearCompleted')
+const filterAll =document.querySelector('.filterAll')
+const filterActive =document.querySelector('.filterActive')
+const filterCompleted =document.querySelector('.filterCompleted')
+const themeToggle = document.querySelector('.toggleTheme');
+// constants
+const  APIKey = `6824bf7b60a208ee1fdf676e`
+const baseUrl = `https://todos.routemisr.com/api/v1/todos`
+// state
+let tasks = []
+let InputValue = '' ;
+// Initialize app
+(async function init(){await getAllTodos()})()
+
+//API Functions
+async function getAllTodos(){
+  let data = await fetch(`${baseUrl}/${APIKey}`)
+  let result = await data.json()
+  tasks = result.todos
+  DisplayTasks(tasks)
+}
+async function addTask(){ 
+
+let result =  await fetch(baseUrl,{
+ method: 'post',
+ body: JSON.stringify( {
+   title: InputValue,
+   apiKey: APIKey
+}),
+ headers: {'content-type': 'application/json'}
+})
+ let message =  await result.json()
+ if(message.message == "success") {
+   await getAllTodos()
+ }
+}
+async function DeleteTask(id){
+  let result = await fetch('https://todos.routemisr.com/api/v1/todos',{
+    method:'DELETE',
+    body: JSON.stringify({
+    todoId: id
+}),
+    headers: {'content-type': 'application/json'}
+  })
+  console.log( await result.json())
+}
+async function markCompleted(id) {
+
+  let result = await fetch('https://todos.routemisr.com/api/v1/todos', {
+    method: 'PUT',
+    body: JSON.stringify( {
+    todoId: id
+  }),
+    headers: { 'content-type': 'application/json' }
+  });
+
+  console.log(await result.json());
+  await getAllTodos()
+}
+// UI Functions
+function DisplayTasks(listOfTasks = tasks){
+  console.log(listOfTasks)
+  countRemainingTasks()// Update remaining tasks counter
+
+  // Clear current displayed tasks
+  const tasksOnScreen = container.querySelectorAll('.task');
+  tasksOnScreen.forEach(task => task.remove());
+
+  // Render each task
+  listOfTasks.forEach((task,index) => {
+    // task container element 
+    let TaskElement = document.createElement('div')
+    TaskElement.className = task.completed ? 'task completed' : 'task';
+    TaskElement.setAttribute("data-id",`${task._id}`)
+
+// task check box element
+let checkBox = document.createElement('input')
+checkBox.classList.add('checkAtTask')
+checkBox.type = 'checkbox'
+checkBox.checked = task.completed
+
+// task title element
+let taskTitle= document.createElement('p')
+taskTitle.classList.add('taskTitle')
+taskTitle.textContent = task.title
+
+// task delete icon element
+let DeleteIcon= document.createElement('img')
+DeleteIcon.classList.add('deleteIcon')
+DeleteIcon.src = "./images/icon-cross.svg"
+DeleteIcon.alt = "delete"
+
+//  add these elements in  task container
+TaskElement.append(checkBox, taskTitle, DeleteIcon);
+
+// add the task element in  box container 
+container.insertBefore(TaskElement,control)
+
+})}
+function countRemainingTasks(){
+  document.querySelector('.remainTasKsCount')?.remove()
+  let listOfRemaining = tasks.filter((task) => task.completed === false)
+  const remainTasKsCount = document.createElement('p')
+  remainTasKsCount.classList.add('remainTasKsCount')
+  remainTasKsCount.textContent = `${listOfRemaining.length} items left`
+  document.querySelector('.todoControl').insertBefore(remainTasKsCount, document.querySelector('.filterTasks'))
+}
+// Events Listener
+AddInput.addEventListener('input',()=>{
+  InputValue = AddInput.value.trim()
+})
+document.addEventListener('keypress',(e)=>{
+   if(e.key == "Enter" && InputValue){ addTask() 
+      InputValue =''
+      AddInput.value = ''}
+})
+container.addEventListener('click', async(e) => {
+  const parent = e.target.closest('.task');
+  const id = parent?.getAttribute('data-id');
+
+  // Delete a task when clicking the delete icon
+  if (e.target.classList.contains('deleteIcon')) {
+    await DeleteTask(id)
+    await getAllTodos();
+  }
+  // task completion when checkbox is clicked
+  if (e.target.classList.contains('checkAtTask')) {
+    const title = e.target.parentElement.querySelector('.taskTitle')
+    await markCompleted(id)
+    const task = tasks.find(t => t._id === id)
+    if (task && task.completed) {
+        title.classList.add('checked')
+    }
+    countRemainingTasks()
+  }
+})
+clearCompleted.addEventListener('click',async ()=>{
+const completed = tasks.filter( task=> task.completed == true)
+  await Promise.all(completed.map(task=> DeleteTask(task._id)))
+  await getAllTodos()
+}
+)
+//filters
+filterAll.addEventListener('click',()=> DisplayTasks(tasks))
+filterActive.addEventListener('click',()=>{
+  let allTasks = tasks.filter(task => task.completed === false)
+   DisplayTasks(allTasks)
+ }
+ )
+filterCompleted.addEventListener('click',()=>{
+  let allTasks = tasks.filter(task => task.completed === true)
+   DisplayTasks(allTasks)
+ }
+ )
+// themeToggle
+  themeToggle.addEventListener('click', function() {
+    document.body.classList.toggle('light-mode');
+    const icon = document.getElementById('theme-icon');
+    const topBg = document.getElementById('topBg');
+    
+    if (document.body.classList.contains('light-mode')) {
+      icon.src = './images/icon-moon.svg';
+      topBg.style.backgroundImage = 'url(../images/bg-desktop-light.jpg)';
+    } else {
+      icon.src = './images/icon-sun.svg';
+      topBg.style.backgroundImage = 'url(../images/bg-desktop-dark.jpg)';
+    }
+  });

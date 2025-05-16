@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  
+  <title>Frontend Mentor | Todo app</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100..700&display=swap" rel="stylesheet">  
+  <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+  <div class="topBackground" id="topBg"></div>
+  <div class="container">
+   
+    <div class="title">
+      <h1>T O D O</h1>
+      <button class="toggleTheme" >
+        <img id="theme-icon" src="./images/icon-sun.svg" alt="toggle theme">
+      </button>
+    </div>
+    
+
+    <div class="add">
+      <div class="inputCheckBox">
+        <input class="checkAtAdd" type="checkbox" disabled>
+        <input class="addTask" type="text">
+      </div>
+    </div>
+
+    <div class="boxContainer">
+      <!-- where the tasks  put in -->
+      <div class="todoControl">
+        <!-- where the count put in -->
+        <div class="filterTasks">
+          <p class="filterAll">All</p>
+          <p class="filterActive">Active</p>
+          <p class="filterCompleted">Completed</p>
+        </div>
+        <p class="clearCompleted">Clear Completed</p>
+      </div>
+    </div>
+    <span class="dragDrop">Drag and drop to reorder list</span>
+  </div>
+  <script src="./assets/main.js"></script>
+</body>
+</html>
