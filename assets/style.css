@@ -34,13 +34,23 @@ body {
   font-weight: 400;
 }
 
-.topBackground {
+.bgDark {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 33.33vh;
   background: url('../images/bg-desktop-dark.jpg') no-repeat center/100% 100%;
+  z-index: -1;
+}
+
+.bgLight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 33.33vh;
+  background: url('../images/bg-desktop-light.jpg') no-repeat center/100% 100%;
   z-index: -1;
 }
 
@@ -264,7 +274,7 @@ body.light-mode .checkAtTask {
 /* === Responsive === */
 @media (max-width: 768px) {
   .container {
-    width: 75%;
+    width: 85%;
   }
   .deleteIcon {
     right: 15px;
@@ -274,7 +284,7 @@ body.light-mode .checkAtTask {
     padding-left: 45px;
   }
   .todoControl {
-    font-size: 8px;
+    font-size: 10px;
     margin: 7px 5px;
   }
 }

@@ -8,15 +8,29 @@ const filterActive =document.querySelector('.filterActive')
 const filterCompleted =document.querySelector('.filterCompleted')
 const themeToggle = document.querySelector('.toggleTheme');
 // constants
-const  APIKey = `6824bf7b60a208ee1fdf676e`
 const baseUrl = `https://todos.routemisr.com/api/v1/todos`
 // state
 let tasks = []
 let InputValue = '' ;
 // Initialize app
-(async function init(){await getAllTodos()})()
+let APIKey = localStorage.getItem('todoAPIKey');
+
+// Initialize app
+(async function init() {
+    if (!APIKey) {
+      APIKey = await getAPIKey();
+      localStorage.setItem('todoAPIKey', APIKey);
+    }
+    await getAllTodos();
+})();
 
 //API Functions
+async function getAPIKey() {
+  const response = await fetch('https://todos.routemisr.com/api/v1/getApiKey');
+  if (!response.ok) throw new Error('Failed to get API key');
+  const data = await response.json();
+  return data.apiKey;
+}
 async function getAllTodos(){
   let data = await fetch(`${baseUrl}/${APIKey}`)
   let result = await data.json()
@@ -164,9 +178,11 @@ filterCompleted.addEventListener('click',()=>{
     
     if (document.body.classList.contains('light-mode')) {
       icon.src = './images/icon-moon.svg';
-      topBg.style.backgroundImage = 'url(../images/bg-desktop-light.jpg)';
+      topBg.classList.remove("bgDark");
+      topBg.classList.add("bgLight");
     } else {
       icon.src = './images/icon-sun.svg';
-      topBg.style.backgroundImage = 'url(../images/bg-desktop-dark.jpg)';
+      topBg.classList.remove("bgLight");
+      topBg.classList.add("bgDark");
     }
   });
