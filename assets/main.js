@@ -86,7 +86,7 @@ function DisplayTasks(listOfTasks = tasks){
   tasksOnScreen.forEach(task => task.remove());
 
   // Render each task
-  listOfTasks.forEach((task,index) => {
+  listOfTasks.forEach(task => {
     // task container element 
     let TaskElement = document.createElement('div')
     TaskElement.className = task.completed ? 'task completed' : 'task';

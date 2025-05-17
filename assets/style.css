@@ -91,6 +91,7 @@ body {
   border-radius: 3px;
   color: #fff;
 }
+
 .btnDark{
   background: var(--Primary-btn-Dark);
 }
