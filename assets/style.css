@@ -2,7 +2,8 @@
   /** === Primary Colors === */
   --Primary-Bright-Blue: hsl(220, 98%, 61%);
   --Primary-Check-Background: linear-gradient(to right, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
-
+  --Primary-btn-Dark: hsl(297, 60%, 30%);
+   --Primary-btn-Light: hsl(245, 55%, 47%);
   /** === Light Theme === */
   --Light-Bg: hsl(0, 0%, 98%);
   --Light-Gray1: hsl(236, 33%, 92%);
@@ -80,12 +81,48 @@ body {
 }
 
 .add {
+ 
+}
+.add{
+  display: flex;
+  gap: 10px;
+}
+.addBtn{
+  padding: 2px 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 3px;
+  color: #fff;
+}
+.btnDark{
+  background: var(--Primary-btn-Dark);
+}
+.btnLight{
+  background: var(--Primary-btn-Light);
+}
+.btn-press {
+  animation: pressDownUp 0.2s ease;
+}
+
+@keyframes pressDownUp {
+  0% {
+    transform: scale(0.95);
+  }
+  /* 30% {
+    transform: scale(0.95);
+  } */
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .inputCheckBox {
   position: relative;
   width: 100%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .checkAtAdd,
@@ -117,6 +154,7 @@ body {
   color: rgb(129, 125, 125);
   text-decoration: line-through;
 }
+
 .addTask,
 .taskTitle {
   width: 100%;
@@ -170,13 +208,13 @@ body {
   height: 16px;
   background: url("../images/icon-cross.svg") no-repeat center/cover;
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  opacity: 1;
+  /* transition: opacity 0.3s ease; */
 }
 
-.task:hover .deleteIcon {
+/* .task:hover .deleteIcon {
   opacity: 1;
-}
+} */
 
 .container span,
 .todoControl,

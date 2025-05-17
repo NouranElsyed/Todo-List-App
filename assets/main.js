@@ -7,6 +7,7 @@ const filterAll =document.querySelector('.filterAll')
 const filterActive =document.querySelector('.filterActive')
 const filterCompleted =document.querySelector('.filterCompleted')
 const themeToggle = document.querySelector('.toggleTheme');
+ const addBtn = document.querySelector('.addBtn')
 // constants
 const baseUrl = `https://todos.routemisr.com/api/v1/todos`
 // state
@@ -123,15 +124,30 @@ function countRemainingTasks(){
   remainTasKsCount.textContent = `${listOfRemaining.length} items left`
   document.querySelector('.todoControl').insertBefore(remainTasKsCount, document.querySelector('.filterTasks'))
 }
+function animateButton(btn) {
+  btn.classList.add("btn-press");
+  setTimeout(() => {
+    btn.classList.remove("btn-press");
+  }, 200);
+}
+function handleAddTask() {
+  if (InputValue) {
+    addTask();
+    InputValue = '';
+    AddInput.value = '';
+    animateButton(addBtn);
+  }
+}
 // Events Listener
 AddInput.addEventListener('input',()=>{
   InputValue = AddInput.value.trim()
 })
-document.addEventListener('keypress',(e)=>{
-   if(e.key == "Enter" && InputValue){ addTask() 
-      InputValue =''
-      AddInput.value = ''}
-})
+
+document.addEventListener('keypress', (e) => {
+  if (e.key === "Enter") handleAddTask();
+});
+
+addBtn.addEventListener('click', handleAddTask);
 container.addEventListener('click', async(e) => {
   const parent = e.target.closest('.task');
   const id = parent?.getAttribute('data-id');
@@ -180,9 +196,14 @@ filterCompleted.addEventListener('click',()=>{
       icon.src = './images/icon-moon.svg';
       topBg.classList.remove("bgDark");
       topBg.classList.add("bgLight");
+      addBtn.classList.remove("btnDark")
+      addBtn.classList.add("btnLight")
+
     } else {
       icon.src = './images/icon-sun.svg';
       topBg.classList.remove("bgLight");
       topBg.classList.add("bgDark");
+      addBtn.classList.add("btnDark")
+      addBtn.classList.remove("btnLight")
     }
   });
