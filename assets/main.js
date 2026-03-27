@@ -9,8 +9,7 @@ const filterCompleted = document.querySelector(".filterCompleted");
 const themeToggle = document.querySelector(".toggleTheme");
 const addBtn = document.querySelector(".addBtn");
 // constants
-const proxy = "https://api.allorigins.win/raw?url=";
-const baseUrl = `${proxy}https://todos.routemisr.com/api/v1/todos`;
+const baseUrl = `https://todos.routemisr.com/api/v1/todos`;
 // state
 let tasks = [];
 let InputValue = "";
@@ -21,6 +20,7 @@ let APIKey = localStorage.getItem("todoAPIKey");
 (async function init() {
   if (!APIKey) {
     APIKey = await getAPIKey();
+    console.log(APIKey)
     localStorage.setItem("todoAPIKey", APIKey);
   }
   await getAllTodos();
@@ -28,16 +28,23 @@ let APIKey = localStorage.getItem("todoAPIKey");
 
 //API Functions
 async function getAPIKey() {
-  const response = await fetch("https://todos.routemisr.com/api/v1/getApiKey");
-  if (!response.ok) throw new Error("Failed to get API key");
-  const data = await response.json();
-  return data.apiKey;
+  try {
+    const response = await fetch("https://todos.routemisr.com/api/v1/getApiKey");
+    const data = await response.json();
+    return data.apiKey;
+  } catch (err) {
+    console.error("API Key Error:", err);
+  }
 }
 async function getAllTodos() {
-  let data = await fetch(`${baseUrl}/${APIKey}`);
-  let result = await data.json();
-  tasks = result.todos;
-  DisplayTasks(tasks);
+  try {
+    let data = await fetch(`${baseUrl}/${APIKey}`);
+    let result = await data.json();
+    tasks = result.todos || [];
+    DisplayTasks(tasks);
+  } catch (err) {
+    console.error("Get Todos Error:", err);
+  }
 }
 async function addTask() {
   let result = await fetch(baseUrl, {
